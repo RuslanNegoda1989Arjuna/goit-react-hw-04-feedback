@@ -1,68 +1,64 @@
-import { Component } from 'react';
+// import { Component } from 'react';
+import { useState } from 'react';
 import { FeedbackOptions } from 'components/FeedbackOptions/FeedbackOptions';
 import { Notification } from 'components/Notification/Notification';
 import { Statistics } from 'components/Statistics/Statistics';
 import { TitleFeedback } from './Title_Feedback/Title_Feedback';
 import { Container, ContainerStatistics } from './App.styled';
 
-export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export const App = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const option = ['good', 'neutral', 'bad'];
+  console.log(option);
+
+  const incriment = option => {
+    switch (option) {
+      case 'good':
+        setGood(state => state + 1);
+        break;
+      case 'neutral':
+        setNeutral(state => state + 1);
+        break;
+      case 'bad':
+        setBad(state => state + 1);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  // Альтернативний варіант:
-
-  // incriment = e => {
-  //   const feedbackValue = e.target.name;
-  //   this.setState(prevState => {
-  //     return { [feedbackValue]: prevState[feedbackValue] + 1 };
-  //   });
-  // };
-
-  incriment = option => {
-    this.setState(prevState => {
-      return { [option]: prevState[option] + 1 };
-    });
-  };
-
-  countTotalFeedback = () => {
-    const { good, neutral, bad } = this.state;
+  const countTotalFeedback = () => {
     return good + neutral + bad;
   };
 
-  positiveFeedback = () => {
-    const { good } = this.state;
-    return parseInt((good / this.countTotalFeedback()) * 100 || 0);
+  const positiveFeedback = () => {
+    return parseInt((good / countTotalFeedback()) * 100 || 0);
   };
 
-  render() {
-    const { good, neutral, bad } = this.state;
-    return (
-      <div>
-        <TitleFeedback title="Please leave feedback" />
-        <Container>
-          <FeedbackOptions
-            options={Object.keys(this.state)}
-            onLeaveFeedback={this.incriment}
+  return (
+    <div>
+      <TitleFeedback title="Please leave feedback" />
+      <Container>
+        <FeedbackOptions options={option} onLeaveFeedback={incriment} />
+      </Container>
+      <ContainerStatistics>
+        <h2>Statistics</h2>
+        {countTotalFeedback() ? (
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={countTotalFeedback()}
+            positivePercentage={positiveFeedback()}
           />
-        </Container>
-        <ContainerStatistics>
-          <h2>Statistics</h2>
-          {this.countTotalFeedback() ? (
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.positiveFeedback()}
-            />
-          ) : (
-            <Notification message="There is no feedback"></Notification>
-          )}
-        </ContainerStatistics>
-      </div>
-    );
-  }
-}
+        ) : (
+          <Notification message="There is no feedback"></Notification>
+        )}
+      </ContainerStatistics>
+    </div>
+  );
+};

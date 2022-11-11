@@ -6,6 +6,7 @@ import { Button } from './FeedbackOptions.styled';
 export const FeedbackOptions = ({ options, onLeaveFeedback }) => (
   <>
     {options.map(option => {
+      console.log(option);
       return (
         <Button
           key={nanoid()}
