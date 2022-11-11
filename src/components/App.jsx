@@ -12,7 +12,6 @@ export const App = () => {
   const [bad, setBad] = useState(0);
 
   const option = ['good', 'neutral', 'bad'];
-  console.log(option);
 
   const incriment = option => {
     switch (option) {
